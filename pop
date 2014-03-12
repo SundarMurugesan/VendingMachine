@@ -1,0 +1,137 @@
+#!/bin/bash
+#pop
+#Sundar Murugesan
+#Assignment #1 - Simulate a Pop Machine
+#CPS 393 
+#Purpose: To simulate operation of a pop machine
+
+
+
+
+# User has to input a selling price. The if statement tells the user that selling price must have a value between 5 and 105 cents and be a multiple of 5. 
+echo
+if [ $1 -gt 105 ]
+then
+      echo "Price must be from 5 to 105 cents inclusive"
+      echo "Usuage: pop [price]"
+      exit 1
+# elif [] less than 5
+     
+elif [  $1 -lt 5 ]
+then
+     echo "Price must be from 5 to 105 cents inclusive"
+     echo "Usuage: pop [price]"
+     exit 2
+
+# elif [] $price mod 5 == 0
+    
+elif [ $(( $1 % 5 )) -ne  0 ]
+then
+     echo "Price must be a multiple of 5"
+     echo "Usuage: pop [price]"
+     exit 3
+ 
+fi
+
+
+echo "Welcome to my Pop Machine!"
+echo
+echo "Pop is $1 cents. Please insert any combination of nickels [N or n], dimes [D or d], or quarters [Q or q]. You can also press R or r for coin return."
+echo
+
+#sets the input of money by user to zero
+money_inputsum=0
+
+#sets remaining money to users input of a price of one pop
+remaining_price=$1
+
+#if else statements were used due to its mulitiple options such as testing and and/or operators
+#User inputs a coin and prints the detected coin, the total amount inserted by the user and the remaining moneyneed to pay for the pop
+
+echo -n "Enter coin (NDQR): "
+while read coin
+do 
+   if [ $coin ==  N -o $coin ==  n ]
+   then
+        echo "   Nickel detected."
+        #tracks how much was put in
+        ((money_inputsum=$money_inputsum + 5))
+        echo "     You have inserted a total of $money_inputsum cents."
+        #tracks how much is still needed
+        (( remaining_price=$remaining_price - 5 ))
+        #displays line if money for pop is insufficient
+        if [ $remaining_price -gt 0 ]
+        then
+             echo "      Please insert $remaining_price more cents."
+             echo -n "Enter coin (NDQR); "
+        fi
+        
+   elif [ $coin == D -o $coin == d ]
+   then 
+        echo "   Dime detected"
+        ((money_inputsum=$money_inputsum + 10))
+        echo "    You have inserted a total of $money_inputsum cents."
+        (( remaining_price=$remaining_price - 10 ))
+        if [ $remaining_price -gt 0 ]
+        then
+             echo "     Please insert $remaining_price more cents."
+             echo -n "Enter coin (NDQR); "
+        fi
+   elif [ $coin == Q -o $coin == q ]
+   then 
+        echo "   Quarter detected"
+        ((money_inputsum=$money_inputsum + 25 ))
+        echo "    You have inserted a total of $money_inputsum cents."
+        (( remaining_price=$remaining_price - 10 ))
+        if [ $remaining_price -gt 0 ]
+        then
+             echo "    Please insert $remaining_price more cents. "
+             echo -n "Enter coin (NDQR); "
+        fi
+   #Change is given back if user asks for refund
+   elif [ $coin == R -o $coin ==  r ]
+   then
+       #
+       change=$money_inputsum
+       #
+       dime=$(( $change / 10))
+       #
+       nickel=$(( $change % 10 / 5 ))
+
+       echo "        Change given: $money_input cents as $dime dimes(s) and $nickel nickel(s)."
+
+       #Sets money value and price remaining back
+      money_inputsum=0
+      remaining_price=$1
+      echo -n "Enter coin (NDQR): "
+   #Exits the program after refunding users money
+   elif [ $coin == E -o $coin == e ]
+   then
+        change=$money_inputsum
+        dime=$(( $change / 10 ))
+        nickel=$(( $change % 10 / 5 ))
+        echo "      Change given: $money_input cents as $dime dime(s) and $nickel nickel(s)."
+        echo "Shutting down. Goodbye."
+        echo
+        exit 4
+   #if any other key is pressed, output will display Unknown coin rejected.
+   else 
+       echo " Unknown coin is rejected. "
+       echo "       You have inserted a total of $money_input cents."
+       echo "       Please insert $remaining_price more cents."
+       echo -n "Enter coin (NDQR): "
+ 
+   fi
+
+  #Dispenses the pop once enough change is given
+  change=$(( $money_inputsum-$1 ))   
+  if [ $money_inputsum -ge $1 ]
+  then
+       #
+        if [ $change -eq 0 ]
+        echo "      Pop is dispensed. Thank you for your business! Please come again."
+        echo -n "Enter coin (NDQR): "
+        fi
+        
+    
+done
